@@ -4,6 +4,88 @@
  */
 
 export interface paths {
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login user */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LoginRequest"];
+                };
+            };
+            responses: {
+                /** @description Login Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthResponse"];
+                    };
+                };
+                401: components["responses"]["UnauthorizedError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register new user */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RegisterRequest"];
+                };
+            };
+            responses: {
+                /** @description Register Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AuthResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/boards": {
         parameters: {
             query?: never;
@@ -114,6 +196,48 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        LoginRequest: {
+            /**
+             * Format: email
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * Format: password
+             * @example password123
+             */
+            password: string;
+        };
+        User: {
+            /** @example 550e8400-e29b-41d4-a716-446655440000 */
+            id: string;
+            /**
+             * Format: email
+             * @example user@example.com
+             */
+            email: string;
+        };
+        AuthResponse: {
+            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock-token */
+            accessToken: string;
+            user: components["schemas"]["User"];
+        };
+        Error: {
+            message: string;
+            code: string;
+        };
+        RegisterRequest: {
+            /**
+             * Format: email
+             * @example newuser@example.com
+             */
+            email: string;
+            /**
+             * Format: password
+             * @example password123
+             */
+            password: string;
+        };
         Board: {
             id: string;
             name: string;
@@ -130,10 +254,6 @@ export interface components {
             total: number;
             totalPages: number;
         };
-        Error: {
-            message: string;
-            code: string;
-        };
         CreateBoard: {
             name: string;
         };
@@ -141,6 +261,15 @@ export interface components {
     responses: {
         /** @description Unauthorized */
         UnauthorizedError: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Error"];
+            };
+        };
+        /** @description Bad request */
+        BadRequestError: {
             headers: {
                 [name: string]: unknown;
             };
