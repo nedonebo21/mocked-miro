@@ -1,7 +1,9 @@
 import { Link, href } from "react-router-dom";
 import { ROUTES } from "@/shared/model/routes";
-import { rqClient } from "@/shared/api/instance.ts";
+import { rqClient } from "@/shared/api/instance";
 import { useQueryClient } from "@tanstack/react-query";
+import { Card, CardFooter, CardHeader } from "@/shared/ui/kit/card";
+import { Button } from "@/shared/ui/kit/button.tsx";
 
 const BoardsListPage = () => {
   const queryClient = useQueryClient();
@@ -28,7 +30,7 @@ const BoardsListPage = () => {
 
   const isCreating = createBoardMutation.isPending;
   return (
-    <>
+    <div className={"container mx-auto p-4"}>
       <h1>Boards List</h1>
 
       <form
@@ -48,7 +50,7 @@ const BoardsListPage = () => {
         </button>
       </form>
 
-      <div>
+      <div className="grid grid-cols-3 gap-4">
         {boardsQuery.data?.list.map((board) => {
           const handleBoardDelete = () => {
             deleteBoardMutation.mutate({
@@ -57,18 +59,28 @@ const BoardsListPage = () => {
           };
           const isDeleting = deleteBoardMutation.isPending;
           return (
-            <div key={board.id}>
-              <Link to={href(ROUTES.BOARD, { boardId: board.id })}>
-                {board.name}
-              </Link>
-              <button disabled={isDeleting} onClick={handleBoardDelete}>
-                Delete
-              </button>
-            </div>
+            <Card key={board.id}>
+              <CardHeader>
+                <Button asChild variant={"link"}>
+                  <Link to={href(ROUTES.BOARD, { boardId: board.id })}>
+                    {board.name}
+                  </Link>
+                </Button>
+              </CardHeader>
+              <CardFooter>
+                <Button
+                  variant={"destructive"}
+                  disabled={isDeleting}
+                  onClick={handleBoardDelete}
+                >
+                  Delete
+                </Button>
+              </CardFooter>
+            </Card>
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 
