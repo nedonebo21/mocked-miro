@@ -104,7 +104,7 @@ function generateRandomBoards(count: number): ApiSchemas["Board"][] {
 
 const boards: ApiSchemas["Board"][] = generateRandomBoards(30);
 
-export const handlers = [
+export const boardsHandlers = [
   http.get("/boards", () => {
     return HttpResponse.json({
       list: boards,
