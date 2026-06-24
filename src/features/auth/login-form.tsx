@@ -9,6 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/shared/ui/kit/button.tsx";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLogin } from "@/features/auth/use-login.ts";
 
 const loginSchema = z.object({
   email: z.email("Неверный email"),
@@ -16,12 +17,14 @@ const loginSchema = z.object({
 });
 
 export const LoginForm = () => {
+  const { login, isPending, errorMessage } = useLogin();
   const form = useForm({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = form.handleSubmit((data) => {
     console.log(data);
+    login(data);
   });
 
   return (
@@ -75,7 +78,8 @@ export const LoginForm = () => {
             )}
           />
         </FieldGroup>
-        <Button type={"submit"}>Войти</Button>
+        {errorMessage && <p className={'text-destructive text-sm'}>{errorMessage}</p>}
+        <Button disabled={isPending} type={"submit"}>Войти</Button>
       </form>
     </FieldSet>
   );
