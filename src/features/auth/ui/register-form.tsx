@@ -9,6 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/shared/ui/kit/button.tsx";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegister } from "@/features/auth/model/use-register.ts";
 
 const registerSchema = z
   .object({
@@ -22,12 +23,15 @@ const registerSchema = z
   });
 
 export const RegisterForm = () => {
+  const {register, isPending, errorMessage} = useRegister()
+
   const form = useForm({
     resolver: zodResolver(registerSchema),
   });
 
   const onSubmit = form.handleSubmit((data) => {
     console.log(data);
+    register(data)
   });
 
   return (
@@ -106,7 +110,10 @@ export const RegisterForm = () => {
             )}
           />
         </FieldGroup>
-        <Button type={"submit"}>Зарегистрироваться</Button>
+        {errorMessage && (
+          <p className={"text-destructive text-sm"}>{errorMessage}</p>
+        )}
+        <Button type={"submit"} disabled={isPending}>Зарегистрироваться</Button>
       </form>
     </FieldSet>
   );
