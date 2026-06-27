@@ -9,7 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/shared/ui/kit/button.tsx";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLogin } from "@/features/auth/use-login.ts";
+import { useLogin } from "@/features/auth/model/use-login.ts";
 
 const loginSchema = z.object({
   email: z.email("Неверный email"),
