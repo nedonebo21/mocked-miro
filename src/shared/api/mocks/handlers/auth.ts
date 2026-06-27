@@ -1,5 +1,5 @@
 import { http } from "@/shared/api/mocks/http.ts";
-import { HttpResponse } from "msw";
+import { delay, HttpResponse } from "msw";
 import { ApiSchemas } from "@/shared/api/schema";
 
 const mockTokens = new Map<string, string>();
@@ -21,6 +21,8 @@ export const authHandlers = [
 
     const user = mockUsers.find((u) => u.email === body.email);
     const storedPassword = userPasswords.get(body.email);
+
+    await delay();
 
     if (!user || !storedPassword || storedPassword !== body.password) {
       return HttpResponse.json(
@@ -45,6 +47,8 @@ export const authHandlers = [
 
   http.post("/auth/register", async ({ request }) => {
     const body = await request.json();
+
+    await delay();
 
     if (mockUsers.some((u) => u.email === body.email)) {
       return HttpResponse.json(
